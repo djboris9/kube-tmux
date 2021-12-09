@@ -1,8 +1,8 @@
 package main // import "github.com/marcsauter/kube-tmux"
 
 import (
+	"fmt"
 	"os"
-	"text/template"
 
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -12,7 +12,6 @@ const (
 )
 
 func main() {
-	format := "[{{.Context}}/{{.Namespace}}]"
 	if len(os.Args) > 1 {
 		format = os.Args[1]
 	}
@@ -28,10 +27,6 @@ func main() {
 	if currentNamespace == "" {
 		currentNamespace = defaultNamespace
 	}
-	template.Must(template.New("tmux").Parse(format)).Execute(os.Stdout, struct {
-		Context, Namespace string
-	}{
-		currentContext,
-		currentNamespace,
-	})
+
+	fmt.Printf("[%s/%s]", currentContext, currentNamespace)
 }
